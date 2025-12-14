@@ -21,4 +21,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByAuthorUsernameContaining(String keyword, Pageable pageable); // 👈 필드명 수정 (author.username)
 
     // 참고: findByWriterContaining 메서드는 Post 엔티티에 writer 필드가 없으므로 삭제하거나 위와 같이 수정해야 합니다.
+
+    // 우와 신기행
 }
