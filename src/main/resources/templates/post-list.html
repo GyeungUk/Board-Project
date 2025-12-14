@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>게시판 목록</title>
+</head>
+<body>
+<section th:fragment="content">
+
+    <h2 class="mb-4">게시판 목록</h2>
+
+    <form class="row mb-4 g-3" th:action="@{/posts}" method="get">
+        <div class="col-auto">
+            <select name="searchType" class="form-select">
+                <option value="title" th:selected="${param.searchType == 'title'}">제목</option>
+                <option value="content" th:selected="${param.searchType == 'content'}">내용</option>
+                <option value="writer" th:selected="${param.searchType == 'writer'}">작성자</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <input type="text" name="keyword" class="form-control" placeholder="검색어를 입력하세요" th:value="${param.keyword}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-secondary">검색</button>
+        </div>
+        <div class="col-auto ms-auto">
+            <a th:href="@{/posts/new}" class="btn btn-primary">글 작성</a>
+        </div>
+    </form>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th style="width: 10%">ID</th>
+            <th>제목</th>
+            <th style="width: 20%">작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post : ${postPage.content}">
+            <td th:text="${post.id}">1</td>
+            <td>
+                <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}">제목</a>
+            </td>
+
+            <td th:text="${post.user != null ? post.user.username : '익명'}">작성자</td>
+
+            <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation" th:if="${postPage.totalPages > 0}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, postPage.totalPages - 1)}"
+                th:classappend="${i == postPage.number} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/posts(page=${i}, searchType=${param.searchType}, keyword=${param.keyword})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+        </ul>
+    </nav>
+</section>
+</body>
+</html>

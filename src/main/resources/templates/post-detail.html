@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+  <title th:text="${post.title}"></title>
+</head>
+<body>
+<section th:fragment="content">
+
+  <div class="mb-4 border-bottom pb-2">
+    <h1 th:text="${post.title}">게시글 제목</h1>
+    <div class="text-muted small">
+      <span>ID: <span th:text="${post.id}"></span></span> |
+      <span>작성일: <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span></span>
+    </div>
+  </div>
+
+  <div class="mb-5" style="min-height: 200px;">
+    <div th:text="${post.content}" style="white-space: pre-wrap;">
+      게시글 내용
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="d-flex gap-2">
+    <a href="/posts" class="btn btn-secondary">목록으로</a>
+
+    <div class="ms-auto">
+      <a th:href="@{'/posts/' + ${post.id} + '/edit'}" class="btn btn-warning text-white">수정</a>
+
+      <form th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post" style="display: inline;">
+        <button type="submit" onclick="return confirm('정말로 삭제하시겠습니까?');" class="btn btn-danger">삭제</button>
+      </form>
+    </div>
+  </div>
+
+</section>
+</body>
+</html>
